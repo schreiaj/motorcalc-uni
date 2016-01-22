@@ -83,7 +83,7 @@ func motorsCsv() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "motors.csv", size: 322, mode: os.FileMode(420), modTime: time.Unix(1453488102, 0)}
+	info := bindataFileInfo{name: "motors.csv", size: 322, mode: os.FileMode(420), modTime: time.Unix(1453498222, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
