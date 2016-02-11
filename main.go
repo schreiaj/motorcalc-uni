@@ -65,21 +65,16 @@ func main() {
 	switch os.Args[2] {
 	case "amps":
 		amps, _ = strconv.ParseFloat(os.Args[3], 64)
-		torque = (amps - selectedMotor.FreeAmps) / (selectedMotor.StallAmps - selectedMotor.FreeAmps) * selectedMotor.StallTorque
-		speed = selectedMotor.FreeSpeed * (1.0 - torque/selectedMotor.StallTorque)
-		powerOut = (speed / 60 * 2 * math.Pi) * torque
-		powerIn = volts * amps
-		efficiency = 100 * (powerOut / powerIn)
+		torque = computeTorque(amps, selectedMotor)
+
 	case "torque":
 		torque, _ = strconv.ParseFloat(os.Args[3], 64)
-		amps = selectedMotor.FreeAmps + (torque/selectedMotor.StallTorque)*(selectedMotor.StallAmps-selectedMotor.FreeAmps)
-		speed = selectedMotor.FreeSpeed * (1.0 - torque/selectedMotor.StallTorque)
-		powerOut = (speed / 60 * 2 * math.Pi) * torque
-		powerIn = volts * amps
-		efficiency = 100 * (powerOut / powerIn)
-
+		amps = computeAmps(torque, selectedMotor)
 	}
-
+	speed = computeSpeed(torque, selectedMotor)
+	powerOut = (speed / 60 * 2 * math.Pi) * torque
+	powerIn = volts * amps
+	efficiency = 100 * (powerOut / powerIn)
 	str := fmt.Sprintf("%.2f\t%.0f\t%.2f\t%.2f\t%.2f\t%.2f", torque, speed, amps, powerOut, powerIn-powerOut, efficiency)
 	fmt.Fprintln(w, "torque(N*m)\trpm\tamps\toutput(W)\theat(W)\teff")
 	fmt.Fprintln(w, str)
@@ -87,4 +82,15 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+}
+func computeTorque(amps float64, selectedMotor *Motor) float64 {
+	return (amps - selectedMotor.FreeAmps) / (selectedMotor.StallAmps - selectedMotor.FreeAmps) * selectedMotor.StallTorque
+}
+
+func computeAmps(torque float64, selectedMotor *Motor) float64 {
+	return selectedMotor.FreeAmps + (torque/selectedMotor.StallTorque)*(selectedMotor.StallAmps-selectedMotor.FreeAmps)
+}
+
+func computeSpeed(torque float64, selectedMotor *Motor) float64 {
+	return selectedMotor.FreeSpeed * (1.0 - torque/selectedMotor.StallTorque)
 }

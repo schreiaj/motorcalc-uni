@@ -1,6 +1,7 @@
 # name, rpm, stall_torque, free_current, stall_current, spec_voltage
 CIM, 5330, 2.41, 2.7, 131, 12
 2xCIM, 5330, 4.82, 5.4, 262, 12
+3xCIM, 5330, 7.23, 8.1, 393, 12
 Mini CIM, 5840, 1.41, 3, 89, 12
 BAG, 13180, 0.43, 1.8, 53, 12
 775pro, 18730, .71, 0.7, 134, 12
